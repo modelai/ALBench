@@ -1,0 +1,435 @@
+labels:
+- aliases: []
+  create_time: &id001 2022-08-22 06:37:50.171150
+  id: 0
+  name: aeroplane
+  update_time: *id001
+- aliases: []
+  create_time: *id001
+  id: 1
+  name: bicycle
+  update_time: *id001
+- aliases: []
+  create_time: *id001
+  id: 2
+  name: bird
+  update_time: *id001
+- aliases: []
+  create_time: *id001
+  id: 3
+  name: boat
+  update_time: *id001
+- aliases: []
+  create_time: *id001
+  id: 4
+  name: bottle
+  update_time: *id001
+- aliases: []
+  create_time: *id001
+  id: 5
+  name: bus
+  update_time: *id001
+- aliases: []
+  create_time: *id001
+  id: 6
+  name: car
+  update_time: *id001
+- aliases: []
+  create_time: *id001
+  id: 7
+  name: cat
+  update_time: *id001
+- aliases: []
+  create_time: *id001
+  id: 8
+  name: chair
+  update_time: *id001
+- aliases: []
+  create_time: *id001
+  id: 9
+  name: cow
+  update_time: *id001
+- aliases: []
+  create_time: *id001
+  id: 10
+  name: diningtable
+  update_time: *id001
+- aliases: []
+  create_time: *id001
+  id: 11
+  name: dog
+  update_time: *id001
+- aliases: []
+  create_time: *id001
+  id: 12
+  name: horse
+  update_time: *id001
+- aliases: []
+  create_time: *id001
+  id: 13
+  name: motorbike
+  update_time: *id001
+- aliases: []
+  create_time: *id001
+  id: 14
+  name: person
+  update_time: *id001
+- aliases: []
+  create_time: *id001
+  id: 15
+  name: pottedplant
+  update_time: *id001
+- aliases: []
+  create_time: *id001
+  id: 16
+  name: sheep
+  update_time: *id001
+- aliases: []
+  create_time: *id001
+  id: 17
+  name: sofa
+  update_time: *id001
+- aliases: []
+  create_time: *id001
+  id: 18
+  name: train
+  update_time: *id001
+- aliases: []
+  create_time: *id001
+  id: 19
+  name: tvmonitor
+  update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 20
+#   name: donut
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 21
+#   name: handbag
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 22
+#   name: umbrella
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 23
+#   name: tv
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 24
+#   name: couch
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 25
+#   name: sports ball
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 26
+#   name: tennis racket
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 27
+#   name: traffic light
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 28
+#   name: wine glass
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 29
+#   name: dining table
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 30
+#   name: cup
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 31
+#   name: baseball bat
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 32
+#   name: baseball glove
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 33
+#   name: backpack
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 34
+#   name: stop sign
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 35
+#   name: airplane
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 36
+#   name: skis
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 37
+#   name: bowl
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 38
+#   name: orange
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 39
+#   name: bed
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 40
+#   name: skateboard
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 41
+#   name: cell phone
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 42
+#   name: laptop
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 43
+#   name: bench
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 44
+#   name: fire hydrant
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 45
+#   name: fork
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 46
+#   name: knife
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 47
+#   name: spoon
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 48
+#   name: clock
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 49
+#   name: cake
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 50
+#   name: remote
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 51
+#   name: teddy bear
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 52
+#   name: giraffe
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 53
+#   name: surfboard
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 54
+#   name: zebra
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 55
+#   name: bear
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 56
+#   name: motorcycle
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 57
+#   name: book
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 58
+#   name: sandwich
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 59
+#   name: banana
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 60
+#   name: tie
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 61
+#   name: suitcase
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 62
+#   name: broccoli
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 63
+#   name: carrot
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 64
+#   name: microwave
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 65
+#   name: sink
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 66
+#   name: scissors
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 67
+#   name: oven
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 68
+#   name: kite
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 69
+#   name: potted plant
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 70
+#   name: hair drier
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 71
+#   name: apple
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 72
+#   name: vase
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 73
+#   name: parking meter
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 74
+#   name: toilet
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 75
+#   name: frisbee
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 76
+#   name: elephant
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 77
+#   name: snowboard
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 78
+#   name: refrigerator
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 79
+#   name: toothbrush
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 80
+#   name: toaster
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 81
+#   name: pizza
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 82
+#   name: mouse
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 83
+#   name: keyboard
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 84
+#   name: hot dog
+#   update_time: *id001
+# - aliases: []
+#   create_time: *id001
+#   id: 85
+#   name: truck
+#   update_time: *id001
+
+
+
+version: 1

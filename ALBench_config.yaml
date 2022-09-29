@@ -1,0 +1,7 @@
+user_name: "intellif"
+password: '123'
+leaderboard_id: 1  # 0 if not using any other training strategy , 1 if any
+detector : ['YOLOV5']
+training_docker: ['youdaoyzbx/ymir-executor:ymir1.1.0-sample-tmi']
+mining_algo: [cald]
+training_docker: ['youdaoyzbx/ymir-executor:ymir1.1.0-sample-tmi']

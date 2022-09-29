@@ -1,0 +1,32 @@
+executor_config:
+  batch_size_per_gpu: 32
+  class_distribution_scores: ''
+  class_names:
+  - chair
+  - sofa
+  - train
+  - bird
+  - dog
+  - horse
+  - aeroplane
+  - boat
+  - cat
+  - bottle
+  - car
+  - tvmonitor
+  - motorbike
+  - cow
+  - sheep
+  - bicycle
+  - diningtable
+  conf_thres: 0.25
+  gpu_id: 0,1,2,3,4,5,6,7
+  idle_seconds: 6
+  img_size: 640
+  iou_thres: 0.45
+  mining_algorithm: cald
+  model_params_path: []
+  num_workers_per_gpu: 4
+  pin_memory: false
+  shm_size: 32G
+  task_id: default-mining-task

@@ -1,0 +1,101 @@
+# infer template for your executor app
+# after build image, it should at /img-man/infer-template.yaml
+# key: gpu_id, task_id, model_params_path, class_names should be preserved
+
+gpu_id: '0,1,2,3,4,5,6,7'
+task_id: 'default-infer-task'
+model_params_path: []
+class_names:
+  - chair
+  - sofa
+  - train
+  - bird
+  - dog
+  - horse
+  - aeroplane
+  - boat
+  - cat
+  - bottle
+  - car
+  - tvmonitor
+  - motorbike
+  - cow
+  - sheep
+  - bicycle
+  - diningtable
+  # - donut
+  # - handbag
+  # - umbrella
+  # - tv
+  # - couch
+  # - sports ball
+  # - tennis racket
+  # - traffic light
+  # - wine glass
+  # - dining table
+  # - cup
+  # - baseball bat
+  # - baseball glove
+  # - backpack
+  # - stop sign
+  # - airplane
+  # - skis
+  # - bowl
+  # - orange
+  # - bed
+  # - skateboard
+  # - cell phone
+  # - laptop
+  # - bench
+  # - fire hydrant
+  # - fork
+  # - knife
+  # - spoon
+  # - clock
+  # - cake
+  # - remote
+  # - teddy bear
+  # - giraffe
+  # - surfboard
+  # - zebra
+  # - bear
+  # - motorcycle
+  # - book
+  # - sandwich
+  # - banana
+  # - tie
+  # - suitcase
+  # - broccoli
+  # - carrot
+  # - microwave
+  # - sink
+  # - scissors
+  # - oven
+  # - kite
+  # - potted plant
+  # - hair drier
+  # - apple
+  # - vase
+  # - parking meter
+  # - toilet
+  # - frisbee
+  # - elephant
+  # - snowboard
+  # - refrigerator
+  # - toothbrush
+  # - toaster
+  # - pizza
+  # - mouse
+  # - keyboard
+  # - hot dog
+  # - truck
+
+# just for test, remove this key in your own docker image
+idle_seconds: 3  # idle seconds for each task
+#seed: 15
+img_size: 640
+conf_thres: 0.25
+iou_thres: 0.45
+batch_size_per_gpu: 32
+num_workers_per_gpu: 4
+pin_memory: False

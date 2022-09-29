@@ -1,0 +1,107 @@
+# training template for your executor app
+# after build image, it should at /img-man/training-template.yaml
+# key: gpu_id, task_id, pretrained_model_paths, class_names should be preserved
+executor_config:
+  task_id: 'default-training-task'
+  anchors: '12, 16, 19, 36, 40, 28, 36, 75, 76, 55, 72, 146, 142, 110, 192, 243, 459, 401'
+  pretrained_model_params: []
+  class_names:
+  - chair
+  - sofa
+  - train
+  - bird
+  - dog
+  - horse
+  - aeroplane
+  - boat
+  - cat
+  - bottle
+  - car
+  - tvmonitor
+  - motorbike
+  - cow
+  - sheep
+  - bicycle
+  - diningtable
+  # - donut
+  # - handbag
+  # - umbrella
+  # - tv
+  # - couch
+  # - sports ball
+  # - tennis racket
+  # - traffic light
+  # - wine glass
+  # - dining table
+  # - cup
+  # - baseball bat
+  # - baseball glove
+  # - backpack
+  # - stop sign
+  # - airplane
+  # - skis
+  # - bowl
+  # - orange
+  # - bed
+  # - skateboard
+  # - cell phone
+  # - laptop
+  # - bench
+  # - fire hydrant
+  # - fork
+  # - knife
+  # - spoon
+  # - clock
+  # - cake
+  # - remote
+  # - teddy bear
+  # - giraffe
+  # - surfboard
+  # - zebra
+  # - bear
+  # - motorcycle
+  # - book
+  # - sandwich
+  # - banana
+  # - tie
+  # - suitcase
+  # - broccoli
+  # - carrot
+  # - microwave
+  # - sink
+  # - scissors
+  # - oven
+  # - kite
+  # - potted plant
+  # - hair drier
+  # - apple
+  # - vase
+  # - parking meter
+  # - toilet
+  # - frisbee
+  # - elephant
+  # - snowboard
+  # - refrigerator
+  # - toothbrush
+  # - toaster
+  # - pizza
+  # - mouse
+  # - keyboard
+  # - hot dog
+  # - truck
+
+
+  gpu_id: '0,1,2,3,4,5,6,7'
+  # just for test, remove this key in your own docker image
+  expected_map: 0.983  # expected map for training task
+  idle_seconds: 5  # idle seconds for each task
+  shm_size: '32G'
+  export_format: 'ark:raw'
+  model: 'yolov5s'
+  batch_size_per_gpu: 32
+  epochs: 10
+  img_size: 640
+  opset: 11
+  args_options: '--exist-ok'
+  save_period: 10
+  sync_bn: True # work for multi-gpu only
