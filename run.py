@@ -80,12 +80,12 @@ class ALBench():
         self.RAW_TRAINING_SET_ANNO_ROOT=self.RAW_DATA_ROOT+"/train/anno"  #! you can change
         self.RAW_TRAINING_SET_INDEX_PATH=self.RAW_DATA_ROOT+"/train-short.txt"  #! you can change
 
-        self.RAW_VAL_SET_IMG_ROOT=self.RAW_DATA_ROOT+"/val_1000/img"  #! you can change
-        self.RAW_VAL_SET_ANNO_ROOT=self.RAW_DATA_ROOT+"/val_1000/anno"  #! you can change
+        self.RAW_VAL_SET_IMG_ROOT=self.RAW_DATA_ROOT+"/val/img"  #! you can change
+        self.RAW_VAL_SET_ANNO_ROOT=self.RAW_DATA_ROOT+"/val/anno"  #! you can change
         self.RAW_VAL_SET_INDEX_PATH=self.RAW_DATA_ROOT+"/val.txt"  #! you can change
 
-        self.RAW_MINING_SET_IMG_ROOT=self.RAW_DATA_ROOT+"/mining_5000/img"  #! you can change
-        self.RAW_MINING_SET_ANNO_ROOT=self.RAW_DATA_ROOT+"/mining_5000/anno"  #! you can change
+        self.RAW_MINING_SET_IMG_ROOT=self.RAW_DATA_ROOT+"/mining/img"  #! you can change
+        self.RAW_MINING_SET_ANNO_ROOT=self.RAW_DATA_ROOT+"/mining/anno"  #! you can change
         self.RAW_MINING_SET_INDEX_PATH=self.RAW_DATA_ROOT+"/mining.txt"  #! you can change, FOR TEST
 
         self.TRAINING_SET_PREFIX=dataset+"-training"
@@ -251,9 +251,9 @@ class ALBench():
         data = yaml.load(open(config),Loader=yaml.FullLoader)
         auto_upload = True
         user_name = data['user_name']
-        password = data['password']
+        token = data['token']
 
-        if not user_name or not password :
+        if not user_name or not token :
             auto_upload = False
 
         try:

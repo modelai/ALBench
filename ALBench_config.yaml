@@ -1,5 +1,5 @@
-user_name: ""
-password: ''
+user_name: "jjj"
+token: '$2b$12$GZCarCbhLoaxQNgqSgND/ejg302Ef3YNWeS7U7bMVW038LMv6ABlq'    # get token at http://120.77.255.232/
 leaderboard_id: 1  # 0 if not using any other training strategy , 1 if any
 detector : ['YOLOV5']
 training_docker: ['youdaoyzbx/ymir-executor:ymir1.1.0-sample-tmi']
