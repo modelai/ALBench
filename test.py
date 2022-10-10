@@ -1,14 +1,6 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow,QMessageBox,QWidget,QCheckBox
-import sys
-from Ui_main_window import *
-class Window(QMainWindow,Ui_MainWindow):
-    def __init__(self):
-        super().__init__()
-        self.setupUi(self)
-if __name__ =='__main__':
-    app = QApplication(sys.argv)
+import os,shutil,random
 
-    myWin=Window()
-    myWin.show()
-    
-    sys.exit(app.exec_())
+sample = random.sample(os.listdir('./data/COCO/train2017/'),5000)
+for name in sample:
+    with open('./train_5000.txt','a') as f:
+        f.write(name+'\n')

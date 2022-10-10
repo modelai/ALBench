@@ -1,10 +1,7 @@
-from cgitb import text
-import code
+
 import json
 import shutil
-from signal import raise_signal
-import sys,os,inspect
-import time
+import sys,os
 import requests
 
 from pathlib import Path
@@ -12,6 +9,26 @@ import subprocess
 import yaml
 import argparse
 import pandas as pd
+import logging
+from utils import download_dataset
+
+VERBOSE = str(os.getenv('ALBench_VERBOSE', True)).lower() == 'true'  # global verbose mode
+def set_logging(name=None, verbose=VERBOSE):
+    rank = int(os.getenv('RANK', -1))  # rank in world for Multi-GPU trainings
+    level = logging.INFO if verbose and rank in {-1, 0} else logging.ERROR
+    log = logging.getLogger(name)
+    log.setLevel(level)
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter("%(message)s"))
+    handler.setLevel(level)
+    log.addHandler(handler)
+
+
+set_logging()  # run before defining LOGGER
+LOGGER = logging.getLogger("ALBench")  # define globally (used in train.py, val.py, detect.py, etc.)
+
+
+
 class ALBench():
 
     def __init__(self):
@@ -25,8 +42,10 @@ class ALBench():
  
         self.CLASS_TYPES="expose_rubbish"
         self.MINING_TOPK=str(500)  #! FOR TEST
-
-
+        self.RAW_DATA_ROOT=''
+        self.RAW_TRAINING_SET_IMG_ROOT=''
+        self.RAW_VAL_SET_IMG_ROOT=''
+        self.RAW_MINING_SET_IMG_ROOT=''
         self.TMP_TRAINING_ROOT=self.CUR_DIR+"/tmp/training"
         self.TMP_MINING_ROOT=self.CUR_DIR+"/tmp/mining"
         self.TMP_OUTLABEL_ASSET_ROOT=self.CUR_DIR+"/tmp/outlabel/assets"
@@ -61,12 +80,12 @@ class ALBench():
         self.RAW_TRAINING_SET_ANNO_ROOT=self.RAW_DATA_ROOT+"/train/anno"  #! you can change
         self.RAW_TRAINING_SET_INDEX_PATH=self.RAW_DATA_ROOT+"/train-short.txt"  #! you can change
 
-        self.RAW_VAL_SET_IMG_ROOT=self.RAW_DATA_ROOT+"/val/img"  #! you can change
-        self.RAW_VAL_SET_ANNO_ROOT=self.RAW_DATA_ROOT+"/val/anno"  #! you can change
+        self.RAW_VAL_SET_IMG_ROOT=self.RAW_DATA_ROOT+"/val_1000/img"  #! you can change
+        self.RAW_VAL_SET_ANNO_ROOT=self.RAW_DATA_ROOT+"/val_1000/anno"  #! you can change
         self.RAW_VAL_SET_INDEX_PATH=self.RAW_DATA_ROOT+"/val.txt"  #! you can change
 
-        self.RAW_MINING_SET_IMG_ROOT=self.RAW_DATA_ROOT+"/mining/img"  #! you can change
-        self.RAW_MINING_SET_ANNO_ROOT=self.RAW_DATA_ROOT+"/mining/anno"  #! you can change
+        self.RAW_MINING_SET_IMG_ROOT=self.RAW_DATA_ROOT+"/mining_5000/img"  #! you can change
+        self.RAW_MINING_SET_ANNO_ROOT=self.RAW_DATA_ROOT+"/mining_5000/anno"  #! you can change
         self.RAW_MINING_SET_INDEX_PATH=self.RAW_DATA_ROOT+"/mining.txt"  #! you can change, FOR TEST
 
         self.TRAINING_SET_PREFIX=dataset+"-training"
@@ -96,7 +115,7 @@ class ALBench():
         self.check_status(return_code)
 
     def initing(self,dataset):
-        self.get_dataset_path(dataset)
+        
 
         init_param=[self.YMIR_MODEL_LOCATION,self.YMIR_ASSET_LOCATION,self.RAW_TRAINING_SET_IMG_ROOT,self.RAW_TRAINING_SET_ANNO_ROOT,\
             self.RAW_VAL_SET_IMG_ROOT, self.RAW_VAL_SET_ANNO_ROOT, self.RAW_MINING_SET_IMG_ROOT, self.RAW_MINING_SET_ANNO_ROOT,\
@@ -230,71 +249,97 @@ class ALBench():
 
     def check_config(self,config):
         data = yaml.load(open(config),Loader=yaml.FullLoader)
+        auto_upload = True
+        user_name = data['user_name']
+        password = data['password']
+
+        if not user_name or not password :
+            auto_upload = False
 
         try:
-            user_name = data['user_name']
-            password = data['password']
             leaderboard_id=data['leaderboard_id']
             training_docker = data['training_docker']
             mining_algo = data['mining_algo']
             detector = data['detector']
             if not training_docker or not mining_algo:
                 raise ValueError(config+': please specify training docker and mining algo')
-            if not user_name or not password :
-                raise ValueError(config+": please specify your ALBench user_name and password, if don't have any, register in http://120.77.255.232/register")
+            
             if leaderboard_id not in [0,1]:
                 raise ValueError(config+': leaderboard_id should  be 0 or 1')
 
         except ValueError as e:
             print(repr(e))
             exit(0)
-        self.upload_config(data)
+        if auto_upload:
+            self.upload_config(data)
         self.user_name=user_name
         self.leaderboard_id=str(leaderboard_id)
         self.training_docker=training_docker
         self.mining_algo = mining_algo
         self.detector = detector
-
+        return auto_upload
     def update_mining_config(self,mining_config_file,mining_algo):
         mining_data = yaml.load(open(mining_config_file),Loader=yaml.FullLoader)
         mining_data['executor_config']['mining_algorithm'] = mining_algo
         with open(mining_config_file,'w') as f:
             yaml.dump(mining_data,f)
 
+    def check_dataset(self):
+        flage = True
+        if not os.path.isdir(self.RAW_DATA_ROOT):
+            download_dataset.download_data()
+        if not os.path.isdir(self.RAW_TRAINING_SET_IMG_ROOT):
+            flage = False
+            LOGGER.info('train dir not exist')
+        if not os.path.isdir(self.RAW_VAL_SET_IMG_ROOT):
+            flage = False
+            LOGGER.info('val dir not exist')
+        if not os.path.isdir(self.RAW_MINING_SET_IMG_ROOT):
+            flage = False
+            LOGGER.info('mining dir not exist')
+        if not flage:
+            exit(0)
 
     def main(self,opt):
-        self.check_config(opt.config)
-        csv_file_name=self.user_name+'_'+self.leaderboard_id+'_'+'result_public.csv'
-       
-        df1 = pd.DataFrame(columns = ['Dataset','Detector','AL_algo','Baseline','iter1','iter2','iter3','iter4'])
-        df_content = []
-        dataset_all=opt.dataset.split(',')
+            
+            auto_apload = self.check_config(opt.config)
+            csv_file_name=self.user_name+'_'+self.leaderboard_id+'_'+'result_public.csv'
+        
+            df1 = pd.DataFrame(columns = ['Dataset','Detector','AL_algo','Baseline','iter1','iter2','iter3','iter4'])
+            df_content = []
+            dataset_all=opt.dataset.split(',')
 
 
-        self.deinit()
-        for dataset in dataset_all:
-            self.initing(dataset)
-            self.importing()
-            for model_index in range(len(self.detector)):
-                for al_algo_index in range(len(self.mining_algo)):
-                    self.update_mining_config('mining-config.yaml',self.mining_algo[al_algo_index])
-                    self.merge(self.detector[model_index],dataset,self.mining_algo[al_algo_index])
-                    df_content = [dataset,self.detector[model_index],self.mining_algo[al_algo_index]]
-                    for i in range(opt.epochs+1):
-                        self.training(i,self.detector[model_index],dataset,self.mining_algo[al_algo_index],self.training_docker[model_index])
-                        self.exclude(i,self.detector[model_index],dataset,self.mining_algo[al_algo_index])
-                        
-                        self.mining(i,self.detector[model_index],dataset,self.mining_algo[al_algo_index],self.training_docker[model_index])
-                        self.join(i,self.detector[model_index],dataset,self.mining_algo[al_algo_index])
-                        df_content.append( self.get_map(i,self.detector[model_index],dataset,self.mining_algo[al_algo_index]))
-                    df4 = pd.DataFrame(df_content).T
+            self.deinit()
+            for dataset in dataset_all:
+                self.get_dataset_path(dataset)
+                self.check_dataset()
+                self.initing(dataset)
+                
+                self.importing()
+                for model_index in range(len(self.detector)):
+                    for al_algo_index in range(len(self.mining_algo)):
+                        self.update_mining_config('mining-config.yaml',self.mining_algo[al_algo_index])
+                        self.merge(self.detector[model_index],dataset,self.mining_algo[al_algo_index])
+                        df_content = [dataset,self.detector[model_index],self.mining_algo[al_algo_index]]
+                        for i in range(opt.epochs+1):
+                            self.training(i,self.detector[model_index],dataset,self.mining_algo[al_algo_index],self.training_docker[model_index])
+                            self.exclude(i,self.detector[model_index],dataset,self.mining_algo[al_algo_index])
+                            
+                            self.mining(i,self.detector[model_index],dataset,self.mining_algo[al_algo_index],self.training_docker[model_index])
+                            self.join(i,self.detector[model_index],dataset,self.mining_algo[al_algo_index])
+                            df_content.append( self.get_map(i,self.detector[model_index],dataset,self.mining_algo[al_algo_index]))
+                        df4 = pd.DataFrame(df_content).T
 
-                    df4.columns = df1.columns
+                        df4.columns = df1.columns
 
-                    df1 = pd.concat([df1,df4],ignore_index=True)
-            df1.to_csv(csv_file_name, index=None)
-            self.upload_result(csv_file_name)
-    def  parse_opt(self):
+                        df1 = pd.concat([df1,df4],ignore_index=True)
+                df1.to_csv(csv_file_name, index=None)
+                if auto_apload:
+                    self.upload_result(csv_file_name)
+
+
+    def parse_opt(self):
         parser = argparse.ArgumentParser()
         parser.add_argument('--dataset',type=str, default='COCO')
         parser.add_argument('--epochs',type=int,default=4)

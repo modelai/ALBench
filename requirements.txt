@@ -1,0 +1,8 @@
+# ALBench requirements
+# Usage: pip install -r requirements.txt
+
+# Base ----------------------------------------
+pandas>=1.4.4
+PyYAML>=6.0
+requests>=2.27
+json>=2.0

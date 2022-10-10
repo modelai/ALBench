@@ -1,7 +1,7 @@
 executor_config:
   batch_size_per_gpu: 32
   class_distribution_scores: ''
-  class_names:
+  class_names: # classes that you want to mining
   - chair
   - sofa
   - train
