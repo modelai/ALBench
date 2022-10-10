@@ -1,1 +1,0 @@
-python test.py --dataset VOC07 --epochs 10

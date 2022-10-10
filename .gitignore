@@ -1,9 +1,0 @@
-data
-cache
-model-hash-txt
-*.csv
-data_
-demo-cycle.sh
-run_backup.py
-test.py
-test.sh
