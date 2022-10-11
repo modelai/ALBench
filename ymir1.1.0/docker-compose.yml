@@ -1,0 +1,130 @@
+version: "3.3"
+services:
+  backend:
+    image: industryessentials/ymir-backend
+    env_file:
+      - .env
+    runtime: ${SERVER_RUNTIME}
+    environment:
+      - BACKEND_REDIS_URL=redis://redis:6379/0
+      # controller
+      - NVIDIA_VISIBLE_DEVICES=all
+      - MODELS_PATH=${YMIR_PATH}/ymir-models
+      - ASSETS_PATH=${YMIR_PATH}/ymir-assets
+      - CONTROLLER_LOG_PATH=${YMIR_PATH}/ymir-data/logs
+      # viz
+      - VIZ_REDIS_URI=redis://:@viz-redis
+      # app
+      - DATABASE_URI=mysql+pymysql://${MYSQL_INITIAL_USER}:${MYSQL_INITIAL_PASSWORD}@db/ymir
+      - GRPC_CHANNEL=127.0.0.1:50066
+      - VIZ_HOST=127.0.0.1:9099
+      - SHARED_DATA_DIR=/ymir-sharing
+      - NGINX_DATA_PATH=/ymir-storage
+      # arq
+      - CHECK_INTERVAL_IN_SECONDS=30
+      # monitor
+      - MONITOR_URL=http://127.0.0.1:9098
+      - APP_API_HOST=127.0.0.1:80
+    volumes:
+      - "${BACKEND_SANDBOX_ROOT}:${BACKEND_SANDBOX_ROOT}"
+      - "${YMIR_PATH}/ymir-data/logs:/app_logs"
+      - "${YMIR_PATH}/ymir-models:${YMIR_PATH}/ymir-models"
+      - "${YMIR_PATH}/ymir-assets:${YMIR_PATH}/ymir-assets"
+      # special volumes for start container in container
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+      - /usr/bin/nvidia-docker:/usr/bin/nvidia-docker
+      - /usr/bin/nvidia-smi:/usr/bin/nvidia-smi
+      - /lib64/libltdl.so.7:/lib64/libltdl.so.7
+      # app
+      - ${YMIR_PATH}/ymir-storage:/ymir-storage
+      - ${YMIR_PATH}/ymir-sharing:/ymir-sharing
+      # tensorboard
+      - "${TENSORBOARD_ROOT}:${TENSORBOARD_ROOT}"
+    depends_on:
+      - db
+      - redis
+      - viz-redis
+      - tensorboard
+      - clickhouse
+    command: bash -c 'cd /app && supervisord -nc supervisor/supervisord.conf'
+    restart: on-failure:10
+    networks:
+      - ymirnetwork
+
+  redis:
+    image: industryessentials/ymir-backend-redis
+    command: redis-server /config/redis/redis.conf --loadmodule /usr/lib/redis/modules/redisgraph.so
+    volumes:
+      - ${YMIR_PATH}/redis:/var/log/redis
+      - ${YMIR_PATH}/redis:/data
+    restart: on-failure:10
+    networks:
+      - ymirnetwork
+
+  viz-redis:
+    image: industryessentials/ymir-viz-redis
+    restart: on-failure:10
+    networks:
+      - ymirnetwork
+
+  web:
+    image: industryessentials/ymir-web
+    volumes:
+      - "${YMIR_PATH}/ymir-models:/data/ymir/ymir-models"
+      - "${YMIR_PATH}/ymir-assets:/data/ymir/ymir-assets"
+      - "${YMIR_PATH}/ymir-storage:/data/ymir/ymir-storage"
+    environment:
+      - LABEL_TOOL_HOST_URL=${LABEL_TOOL_HOST_URL}
+    ports:
+      - ${NGINX_PORT}:80
+    restart: on-failure:10
+    depends_on:
+      - backend
+    networks:
+      - ymirnetwork
+
+  db:
+    image: 'mysql/mysql-server:8.0.25'
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_INITIAL_USER}
+      - MYSQL_PASSWORD=${MYSQL_INITIAL_PASSWORD}
+    volumes:
+      - ${YMIR_PATH}/mysql:/var/lib/mysql
+    restart: on-failure:10
+    networks:
+      - ymirnetwork
+
+  tensorboard:
+    image: tensorflow/tensorflow:latest
+    env_file:
+      - .env
+    volumes:
+      - "${TENSORBOARD_ROOT}:${TENSORBOARD_ROOT}"
+    command: tensorboard --logdir ${TENSORBOARD_ROOT} --port 6006 --bind_all
+    restart: on-failure:10
+    networks:
+      - ymirnetwork
+
+  clickhouse:
+    image: clickhouse/clickhouse-server
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    volumes:
+      - ${YMIR_PATH}/clickhouseDB:/var/lib/clickhouse
+    restart: on-failure:10
+    networks:
+      - ymirnetwork
+
+networks:
+  ymirnetwork:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.168.254.0/24
+        gateway: 172.168.254.1

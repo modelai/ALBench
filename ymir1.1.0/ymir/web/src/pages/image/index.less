@@ -1,0 +1,33 @@
+.title {
+  font-weight: bold;
+  position: relative;
+  .tabs {
+    :global(.ant-tabs-tab-btn) {
+      font-size: 16px !important;
+    }
+  }
+  .search {
+    position: absolute;
+    right: 0;
+    :global(.ant-form-item:last-child) {
+      margin-right: 0;
+    }
+    :global(.ant-form-item-control) {
+      font-weight: normal;
+    }
+  }
+}
+.addBtn {
+  margin: 10px 0;
+  padding: 10px;
+  border: 2px dashed rgba(0, 0, 0, 0.15);
+  width: 100%;
+  color: @primary-color;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  &:hover {
+    border-color: @primary-color;
+  }
+}

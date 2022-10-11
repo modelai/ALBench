@@ -1,0 +1,117 @@
+access_log /var/log/nginx/access.log combined;
+
+upstream backend_api {
+    server backend:80;
+}
+upstream tensorboard_web {
+    server tensorboard:6006;
+}
+upstream socket_server {
+    server backend:80;
+}
+
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    '' close;
+}
+
+server {
+    # use 'listen 80 deferred;' for Linux
+    # use 'listen 80 accept_filter=httpready;' for FreeBSD
+    client_max_body_size 4G;
+
+    # set the correct host(s) for your site
+    server_name localhost;
+
+    keepalive_timeout 5;
+
+    location /api/ {
+        proxy_pass http://backend_api/api/;
+        add_header 'Access-Control-Allow-Origin' '*';
+        proxy_set_header   Host $host;
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Host $server_name;
+    }
+
+    # backend's Swagger UI
+    location /docs {
+        proxy_pass http://backend_api/docs;
+        add_header 'Access-Control-Allow-Origin' '*';
+        proxy_set_header   Host $host;
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Host $server_name;
+    }
+
+    # backend's static files for Swagger UI
+    location ~ /static/(swagger.*) {
+        proxy_pass http://backend_api/static/$1;
+        add_header 'Access-Control-Allow-Origin' '*';
+        proxy_set_header   Host $host;
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Host $server_name;
+    }
+
+    location /label_tool/ {
+        return 307 ${LABEL_TOOL_HOST_URL};
+    }
+
+    location /socket/ {
+        proxy_pass http://socket_server/;
+        proxy_set_header   X-Forwarded-Host $server_name;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+    }
+
+    location /tensorboard/ {
+        proxy_pass http://tensorboard_web/;
+        proxy_redirect off;
+        proxy_set_header   Host $host;
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    # frontend entrypoint
+    location / {
+        if ($http_referer ~ /socket/) {
+            rewrite ^(.*) /socket/$1 permanent;
+        }
+        root /usr/share/nginx/html;
+        index index.html index.htm;
+        try_files $uri $uri/ /index.html =404;
+    }
+
+    # static files
+    location /ymir-assets/ {
+        rewrite ^(.*)a000000000(.*)$ $1$2 break;
+        types { } default_type  "image/jpeg;";
+        root /data/ymir/;
+    }
+
+    location /ymir-models/ {
+        root /data/ymir/;
+    }
+
+    location /ymir-storage/ {
+        add_header Content-Disposition "attachment";
+        root /data/ymir/;
+    }
+
+    #error_page 500 502 503 504 /500.html;
+    #location = /500.html {
+    #  root /path/to/app/current/public;
+    #}
+
+    #listen 443 ssl; # managed by Certbot
+    #ssl_certificate /etc/letsencrypt/live/api.domain.com/fullchain.p>
+    #ssl_certificate_key /etc/letsencrypt/live/api.domain.com/privkey>
+    #include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    #ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
