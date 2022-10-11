@@ -450,17 +450,10 @@ LABEL_TOOL_TOKEN="Token token_value"
 
 ## 4.1 安装
 
-### 方式一：通过pip安装
 
-```
-# Requires >= Python3.8.10
-$ pip install ymir-cmd
-$ mir --vesion
-```
 
-### 方式二：通过源码安装
+### 通过源码安装
 ```
-$ git clone --recursive git@github.com:IndustryEssentials/ymir.git
 $ cd ymir/command
 $ python setup.py clean --all install
 $ mir --version
