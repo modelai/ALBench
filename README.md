@@ -58,7 +58,7 @@ prior arts
 ```
 ## Installation
 ### Prerequisites
-Follow the [INSTALL.md](https://github.com/IndustryEssentials/ymir#2-installation) to install ymir first
+Follow the [INSTALL.md](https://github.com/modelai/ALBench/tree/main/ymir1.1.0#2-installation) to install ymir first
 ```
 pip install -r requirements.txt
 ```
