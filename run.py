@@ -229,7 +229,7 @@ class ALBench():
 
     def upload_result(self,file):
         dfile =open(file)
-        url_official="http://120.77.255.232/file"
+        url_official="http://113.100.143.90:5000/file"
         test_res_official = requests.post(url_official,files={"file":dfile})
         if test_res_official.ok:
             print('ok')
@@ -238,7 +238,7 @@ class ALBench():
 
     def upload_config(self,data):
         data = json.dumps(data)
-        url_official="http://120.77.255.232/config"
+        url_official="http://113.100.143.90:5000/config"
         test_res_official = requests.post(url_official,data)
         response = json.loads(test_res_official.text)
         if response['code']==404:
