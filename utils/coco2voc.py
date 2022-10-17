@@ -1,9 +1,10 @@
-import os
-import xml.etree.ElementTree as ET
-import pdb
 import json
-import tqdm
+import os
+import pdb
+import xml.etree.ElementTree as ET
 from collections import defaultdict
+
+import tqdm
 
 '''
 convert txt to xml
@@ -18,13 +19,13 @@ def coco2voc(anno_file, save_dir):
 
     id_name_mapping = {}
     for each in data["categories"]:
-       id = each["id"]
-       name = each["name"]
-       id_name_mapping[id] = name
+        id = each["id"]
+        name = each["name"]
+        id_name_mapping[id] = name
 
     anno_dict = defaultdict(list)
     image_info = data["images"]
-    
+
     for each in data["annotations"]:
         img_id = each["image_id"]
         cat_name = id_name_mapping[each["category_id"]]
@@ -71,13 +72,12 @@ def coco2voc(anno_file, save_dir):
             xml_file.write('            <ymax>' + str(ymax) + '</ymax>\n')
             xml_file.write('        </bndbox>\n')
             xml_file.write('    </object>\n')
-        
+
         xml_file.write('</annotation>')
         xml_file.close()
 
+
 if __name__ == "__main__":
-    SAVE_DIR = os.path.join(os.path.pardir,'data','COCO','annotations','xml')
-    # coco2voc(os.path.join(os.path.pardir,'data','COCO','annotations','instances_train2017.json'), SAVE_DIR)
-    coco2voc(os.path.join(os.path.pardir,'data','COCO','annotations','instances_val2017.json'), SAVE_DIR)
-
-
+    SAVE_DIR = os.path.join(os.path.pardir, 'data', 'COCO', 'annotations', 'xml')
+    coco2voc(os.path.join(os.path.pardir, 'data', 'COCO', 'annotations', 'instances_train2017.json'), SAVE_DIR)
+    coco2voc(os.path.join(os.path.pardir, 'data', 'COCO', 'annotations', 'instances_val2017.json'), SAVE_DIR)

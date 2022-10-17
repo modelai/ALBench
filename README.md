@@ -1,6 +1,6 @@
 # ALBench
 ## ALBench Leaderboard for active learning in object detection
-**we offer a leaderborad for active learning in object detection in [here](http://113.100.143.90:5000/)** 
+**we offer a leaderborad for active learning in object detection in [here](http://113.100.143.90:5000/)**
 ## Introduction
  Active learning has been popular
 in image classification, but has not been fully explored in object detection. Most of current
@@ -69,7 +69,7 @@ pip install -r requirements.txt
 ```
 ALBench_path$ python utils/download_dataset.py
 ```
-2. Organize the dataset: 
+2. Organize the dataset:
 ```
 ALBench_path$ cd utils
 ALBench_path/utils$ python coco2voc.py
@@ -93,14 +93,14 @@ ALBench/
 ## Build Ymir executor
 ALBench is based on Ymir system, detector and active learning algorithm should be build as  docker image. To build your own Ymir executor, or get our official executor, see [build ymir executor](https://github.com/modelai/ymir-executor-fork/tree/ymir-dev#build-ymir-executor) for detail
 ## modify config file
-1. modify ALBench_config.yaml based on the instuction below
+1. modify ALBench_config.yaml based on the introduction below
 ```
 # your user name and password for ALBench Leaderboard if you want result automatically uploaded to leaderboard
 user_name: ""
 password: ''
 
 # 1 if you using any other training strategy,such as semi-supervised learning , else 0
-leaderboard_id: 1  
+leaderboard_id: 1
 
 # detector and training_docker are paired
 detector : ['YOLOV5','SSD']
@@ -114,7 +114,7 @@ mining_docker: ['youdaoyzbx/ymir-executor:ymir1.1.0-cald']
 ```
 sh run.sh
 ```
-training and mining result will be listed in 
+training and mining result will be listed in
 ```
 ALBench_path/tmp/training
 ALBench_path/tmp/mining
