@@ -71,9 +71,8 @@ ALBench_path$ python utils/download_dataset.py
 ```
 2. Organize the dataset:
 ```
-ALBench_path$ cd utils
-ALBench_path/utils$ python coco2voc.py
-ALBench_path/utils$ python generate_dataset.py
+ALBench_path$ python utils/coco2voc.py
+ALBench_path$ python utils/generate_dataset.py
 ```
 dataset should be organized as following
 ```
