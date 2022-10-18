@@ -6,3 +6,8 @@ pandas>=1.4.4
 PyYAML>=6.0
 requests>=2.27
 json>=2.0
+tqdm>=4.30.0
+pandas>=1.5.0
+
+# Download dataset ----------------------------------------
+# torch

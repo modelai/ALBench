@@ -69,21 +69,14 @@ def download_data():
         coco2017=[
             'http://images.cocodataset.org/zips/train2017.zip',
             'http://images.cocodataset.org/zips/val2017.zip',
-            'http://images.cocodataset.org/zips/test2017.zip',
-            'http://images.cocodataset.org/annotations/' +
-            'annotations_trainval2017.zip'
-        ]
-    )
+            # 'http://images.cocodataset.org/zips/test2017.zip',
+            'http://images.cocodataset.org/annotations/' + 'annotations_trainval2017.zip'
+        ])
     url = data2url.get('coco2017', None)
     if url is None:
         print('Only support COCO now!')
         return
-    download(
-        url,
-        dir=path,
-        unzip=True,
-        delete=args.delete,
-        threads=args.threads)
+    download(url, dir=path, unzip=True, delete=args.delete, threads=args.threads)
 
 
 if __name__ == '__main__':
