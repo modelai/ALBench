@@ -293,8 +293,12 @@ class ALBench():
     def check_dataset(self):
         flage = True
         if not os.path.isdir(self.RAW_DATA_ROOT):
-            from utils import download_dataset
+            from utils import download_dataset,coco2voc,generate_dataset
             download_dataset.download_data()
+            coco2voc.COCO2VOC()
+            generate_dataset.generate_dataset()
+        if not os.path.isfile(os.path.join(self.RAW_DATA_ROOT,'labels.yaml')):
+            shutil.copy('labels.yaml',self.RAW_DATA_ROOT)
         if not os.path.isdir(self.RAW_TRAINING_SET_IMG_ROOT):
             flage = False
             LOGGER.info('train dir not exist')

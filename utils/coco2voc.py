@@ -76,8 +76,11 @@ def coco2voc(anno_file, save_dir):
         xml_file.write('</annotation>')
         xml_file.close()
 
-
+def COCO2VOC():
+    SAVE_DIR = os.path.join('data', 'COCO', 'annotations', 'xml')
+    coco2voc(os.path.join('data', 'COCO', 'annotations', 'instances_train2017.json'), SAVE_DIR)
+    coco2voc(os.path.join('data', 'COCO', 'annotations', 'instances_val2017.json'), SAVE_DIR)
 if __name__ == "__main__":
-    SAVE_DIR = os.path.join(os.path.pardir, 'data', 'COCO', 'annotations', 'xml')
-    coco2voc(os.path.join(os.path.pardir, 'data', 'COCO', 'annotations', 'instances_train2017.json'), SAVE_DIR)
-    coco2voc(os.path.join(os.path.pardir, 'data', 'COCO', 'annotations', 'instances_val2017.json'), SAVE_DIR)
+    COCO2VOC()
+    
+    
