@@ -65,7 +65,7 @@ def _cleanup_dir_sub_items(dir: str, ignored_items: Set[str]) -> None:
 def _cleanup(work_dir: str) -> None:
     if not work_dir:
         return
-
+    return
     _cleanup_dir_sub_items(work_dir, ignored_items={'out'})
 
     _cleanup_dir_sub_items(

@@ -23,6 +23,8 @@ MDOEL_NAME=${13}
 DATASET_NAME=${14}
 EXECUTOR=${15}
 AL_ALGO=${16}
+MINING_CONFIG=${17}
+
 mining() {
     if [[ $# -lt 3 ]]; then
         echo "exclude needs cycle num and model hash, abort" >&2
@@ -40,7 +42,7 @@ mining() {
                         --media-location "$YMIR_ASSET_LOCATION" \
                         --model-hash $3 \
                         --cache $MEDIA_CACHE_PATH \
-                        --task-config-file "$CUR_DIR/mining-config.yaml" \
+                        --task-config-file "$CUR_DIR/$MINING_CONFIG" \
                         --executor $EXECUTOR
     else
         echo "invalid cycle num: $2, abort" >&2

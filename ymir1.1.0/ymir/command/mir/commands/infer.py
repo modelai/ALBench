@@ -307,7 +307,7 @@ def run_docker_cmd(asset_path: str, index_file_path: str, model_path: str, confi
     cmd.append(f"-v{env_file_path}:/in/env.yaml")
     cmd.append(f"-v{out_path}:/out")
     # permissions and shared memory
-    cmd.extend(['--user', f"{os.getuid()}:{os.getgid()}"])
+    # cmd.extend(['--user', f"{os.getuid()}:{os.getgid()}"])
     if gpu_id:
         cmd.extend(['--gpus', f"\"device={gpu_id}\""])
     if shm_size:

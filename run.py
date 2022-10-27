@@ -1,6 +1,7 @@
 import argparse
 import json
 import logging
+from opcode import opname
 import os
 import shutil
 import subprocess
@@ -161,10 +162,10 @@ class ALBench():
 
         self.check_status(return_code)
 
-    def training(self, cycle, model, dataset, al_algo, excutor):
+    def training(self, cycle, model, dataset, al_algo, excutor, training_config):
         training_param = [
             self._MERGED_TRAINING_SET_PREFIX, self._TRAINED_TRAINING_SET_PREFIX, self.MIR_ROOT, self.TMP_TRAINING_ROOT,
-            self.YMIR_MODEL_LOCATION, self.YMIR_ASSET_LOCATION, self.CUR_DIR, excutor, model, dataset, al_algo
+            self.YMIR_MODEL_LOCATION, self.YMIR_ASSET_LOCATION, self.CUR_DIR, excutor, model, dataset, al_algo, training_config
         ]
         training_command = ' ./command/training.sh training ' + str(cycle) + ' '
 
@@ -174,7 +175,7 @@ class ALBench():
 
         self.check_status(return_code)
         self.model_hash_txt_path = os.path.join(
-            self.MODEL_HASH_TXT_DIR, self._TRAINED_TRAINING_SET_PREFIX + '-' + model + '-' + dataset + '.txt')
+            self.MODEL_HASH_TXT_DIR, self._TRAINED_TRAINING_SET_PREFIX + '-' + model + '-' + dataset + '-' + al_algo + '.txt')
         if os.listdir(self.YMIR_MODEL_LOCATION):
             for model_hash in os.listdir(self.YMIR_MODEL_LOCATION):
                 if model_hash not in self.model_hash:
@@ -193,7 +194,7 @@ class ALBench():
 
         self.check_status(return_code)
 
-    def mining(self, cycle, model, dataset, al_algo, executor):
+    def mining(self, cycle, model, dataset, al_algo, executor, mining_config):
         with open(self.model_hash_txt_path, 'r') as f:
             model_hashes = f.readlines()
         model_hash = model_hashes[cycle].strip()
@@ -201,7 +202,7 @@ class ALBench():
         mining_param = [
             self._EXCLUDED_SET_PREFIX, self._MINED_SET_PREFIX, self.MIR_ROOT, self.TMP_MINING_ROOT, self.MINING_TOPK,
             self.YMIR_MODEL_LOCATION, self.YMIR_ASSET_LOCATION, self.MEDIA_CACHE_PATH, self.CUR_DIR, model, dataset,
-            executor, al_algo
+            executor, al_algo , mining_config
         ]
         mining_command = ' ./command/mining.sh mining ' + str(cycle) + ' ' + str(model_hash) + ' '
         p = subprocess.Popen(mining_command + ' '.join(mining_param), shell=True)
@@ -268,7 +269,8 @@ class ALBench():
             detector = data['detector']
             if not training_docker or not mining_algo:
                 raise ValueError(config + ': please specify training docker and mining algo')
-
+            if len(detector)!=len(training_docker):
+                raise ValueError(config + ': please specify detector name based on training docker')
             if leaderboard_id not in [0, 1]:
                 raise ValueError(config + ': leaderboard_id should  be 0 or 1')
 
@@ -280,8 +282,8 @@ class ALBench():
         self.user_name = user_name
         self.leaderboard_id = str(leaderboard_id)
         self.training_docker = training_docker
-        self.mining_algo = mining_algo
-        self.detector = detector
+        self.mining_algo = list(map(lambda x:x.upper(),mining_algo))
+        self.detector = list(map(lambda x:x.upper(),detector))
         return auto_upload
 
     def update_mining_config(self, mining_config_file, mining_algo):
@@ -313,35 +315,46 @@ class ALBench():
 
     def main(self, opt):
 
-        auto_apload = self.check_config(opt.config)
-        csv_file_name = self.user_name + '_' + self.leaderboard_id + '_' + 'result_public.csv'
-
+        auto_apload = self.check_config(opt.ALBench_config)
+        exit()
+        csv_file_name = self.user_name + '_' + opt.dataset + '_' + self.leaderboard_id + '_' + 'result_public.csv'
+        txt_name = self.user_name + '_' + opt.dataset + '_' + self.leaderboard_id + '_' + 'result_public.txt'
         df1 = pd.DataFrame(columns=['Dataset', 'Detector', 'AL_algo', 'Baseline', 'iter1', 'iter2', 'iter3', 'iter4'])
         df_content = []
         dataset_all = opt.dataset.split(',')
 
-        self.deinit()
+        # self.deinit()
         for dataset in dataset_all:
             self.get_dataset_path(dataset)
             self.check_dataset()
-            self.initing(dataset)
+            # self.initing(dataset)
 
-            self.importing()
+            # self.importing()
+            print(opt.mining_config,opt.training_config)
             for model_index in range(len(self.detector)):
                 for al_algo_index in range(len(self.mining_algo)):
-                    self.update_mining_config('mining-config.yaml', self.mining_algo[al_algo_index])
+                    self.update_mining_config(opt.mining_config, self.mining_algo[al_algo_index])
                     self.merge(self.detector[model_index], dataset, self.mining_algo[al_algo_index])
                     df_content = [dataset, self.detector[model_index], self.mining_algo[al_algo_index]]
-                    for i in range(opt.epochs + 1):
+                    with open(txt_name,'a') as f:
+                        f.write('\n')
+                        f.write(','.join(df_content))
+
+                    for i in range(opt.iters + 1):
                         self.training(i, self.detector[model_index], dataset, self.mining_algo[al_algo_index],
-                                      self.training_docker[model_index])
+                                      self.training_docker[model_index],opt.training_config)
                         self.exclude(i, self.detector[model_index], dataset, self.mining_algo[al_algo_index])
 
                         self.mining(i, self.detector[model_index], dataset, self.mining_algo[al_algo_index],
-                                    self.training_docker[model_index])
+                                    self.training_docker[model_index],opt.mining_config)
                         self.join(i, self.detector[model_index], dataset, self.mining_algo[al_algo_index])
-                        df_content.append(
-                            self.get_map(i, self.detector[model_index], dataset, self.mining_algo[al_algo_index]))
+                        
+                        map = self.get_map(i, self.detector[model_index], dataset, self.mining_algo[al_algo_index])
+                        df_content.append(map)
+
+                        with open(txt_name,'a') as f:
+                            f.write(','+str(map))
+
                     df4 = pd.DataFrame(df_content).T
 
                     df4.columns = df1.columns
@@ -354,8 +367,11 @@ class ALBench():
     def parse_opt(self):
         parser = argparse.ArgumentParser()
         parser.add_argument('--dataset', type=str, default='COCO')
-        parser.add_argument('--epochs', type=int, default=4)
-        parser.add_argument('--config', type=str, default='ALBench_config.yaml')
+        parser.add_argument('--iters', type=int, default=4) # Do 4 mining , don't change it
+        parser.add_argument('--ALBench-config', type=str, default='ALBench_config.yaml')
+        parser.add_argument('--training-config', type=str, default='training-config.yaml')
+        parser.add_argument('--mining-config', type=str, default='mining-config.yaml')
+
         return parser.parse_args()
 
 

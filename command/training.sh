@@ -20,8 +20,10 @@ EXECUTOR=${10}
 MDOEL_NAME=${11}
 DATASET_NAME=${12}
 AL_ALGO=${13}
+TRAINING_CONFIG=${14}
 
-echo $EXECUTOR
+
+
 training() {
     # prepare and training
     if [[ $# -lt 2 ]]; then
@@ -38,7 +40,7 @@ training() {
                        --media-location "$YMIR_ASSET_LOCATION" \
                        --src-revs "$_MERGED_TRAINING_SET_PREFIX-$MDOEL_NAME-$DATASET_NAME-$AL_ALGO-$2@$_MERGED_TRAINING_SET_PREFIX-$MDOEL_NAME-$DATASET_NAME-$AL_ALGO-$2" \
                        --dst-rev "$_TRAINED_TRAINING_SET_PREFIX-$MDOEL_NAME-$DATASET_NAME-$AL_ALGO-$2@$_TRAINED_TRAINING_SET_PREFIX-$MDOEL_NAME-$DATASET_NAME-$AL_ALGO-$2" \
-                       --task-config-file "$CUR_DIR/training-config.yaml" \
+                       --task-config-file "$CUR_DIR/$TRAINING_CONFIG" \
                        --executor $EXECUTOR
     else
         echo "invalid cycle num: $2, abort" >&2

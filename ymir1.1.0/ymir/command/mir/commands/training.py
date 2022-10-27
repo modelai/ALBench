@@ -346,7 +346,7 @@ class CmdTrain(base.BaseCommand):
         cmd.extend(path_binds)
         if available_gpu_id:
             cmd.extend(['--gpus', f"\"device={available_gpu_id}\""])
-        cmd.extend(['--user', f"{os.getuid()}:{os.getgid()}"])  # run as current user
+        # cmd.extend(['--user', f"{os.getuid()}:{os.getgid()}"])  # run as current user
         cmd.extend(['--name', f"{executant_name}"])  # executor name used to stop executor
         cmd.append(executor)
 

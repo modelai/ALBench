@@ -58,21 +58,22 @@ prior arts
 ```
 ## Installation
 ### Prerequisites
-Follow the [INSTALL.md](https://github.com/modelai/ALBench/tree/main/ymir1.1.0#41-installation) to install ymir first
+
 ```
-pip install -r requirements.txt
+path/to/ALBecnh$ pip install -e ymir1.1.0/ymir/command
+path/to/ALBecnh$ pip install -r requirements.txt
 ```
 
 
 ## Dataset download
 1. Download COCO dataset
 ```
-ALBench_path$ python utils/download_dataset.py
+path/to/ALBecnh$ python utils/download_dataset.py
 ```
 2. Organize the dataset:
 ```
-ALBench_path$ python utils/coco2voc.py
-ALBench_path$ python utils/generate_dataset.py
+path/to/ALBecnh$ python utils/coco2voc.py
+path/to/ALBecnh$ python utils/generate_dataset.py
 ```
 dataset should be organized as following
 ```
@@ -115,6 +116,6 @@ sh run.sh
 ```
 training and mining result will be listed in
 ```
-ALBench_path/tmp/training
-ALBench_path/tmp/mining
+path/to/ALBecnh/tmp/training
+path/to/ALBecnh/tmp/mining
 ```

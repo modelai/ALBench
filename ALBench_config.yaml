@@ -1,7 +1,6 @@
-user_name: "jjj"
-token: '$2b$12$GZCarCbhLoaxQNgqSgND/ejg302Ef3YNWeS7U7bMVW038LMv6ABlq'    # get token at http://120.77.255.232/
-leaderboard_id: 1  # 0 if not using any other training strategy , 1 if any
-detector : ['YOLOV5']
+user_name: "" 
+token: ''    # get token and user name at http://113.100.143.90:5000/
+leaderboard_id: 0  # 0 if not using any other training strategy , 1 if any
+detector : [yolov5]
 training_docker: ['youdaoyzbx/ymir-executor:ymir1.1.0-sample-tmi']
 mining_algo: [cald]
-mining_docker: ['youdaoyzbx/ymir-executor:ymir1.1.0-sample-tmi']
