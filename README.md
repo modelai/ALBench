@@ -108,7 +108,6 @@ training_docker: ['youdaoyzbx/ymir-executor:ymir1.1.0-YOLOV5','youdaoyzbx/ymir-e
 
 # mining_algo and mining_docker are paired
 mining_algo: [cald]
-mining_docker: ['youdaoyzbx/ymir-executor:ymir1.1.0-cald']
 ```
 ## Usage
 ```
