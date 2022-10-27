@@ -316,7 +316,6 @@ class ALBench():
     def main(self, opt):
 
         auto_apload = self.check_config(opt.ALBench_config)
-        exit()
         csv_file_name = self.user_name + '_' + opt.dataset + '_' + self.leaderboard_id + '_' + 'result_public.csv'
         txt_name = self.user_name + '_' + opt.dataset + '_' + self.leaderboard_id + '_' + 'result_public.txt'
         df1 = pd.DataFrame(columns=['Dataset', 'Detector', 'AL_algo', 'Baseline', 'iter1', 'iter2', 'iter3', 'iter4'])
