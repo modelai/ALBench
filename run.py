@@ -70,7 +70,7 @@ class ALBench():
         self.CUR_DIR = os.getcwd()
 
         self.RAW_DATA_ROOT = os.path.join(self.CUR_DIR, 'data', dataset)  #! you can change
-        print(self.RAW_DATA_ROOT)
+        print('data root:',self.RAW_DATA_ROOT)
         # in this pipeline, the whole data is devided into 3 part: TRAINING_SET, the VAL_SET and the MINING_SET
         # TRAINING_SET and VAL_SET are used to train the first version of model
         # and MINING_SET used to mining datas with command mir mining
@@ -220,7 +220,7 @@ class ALBench():
 
     def get_map(self, i, model, dataset, al_algo):
         trained_dir_name = self._MERGED_TRAINING_SET_PREFIX + '-' + model + '-' + dataset + '-' + al_algo + '-' + str(i)
-        print(os.path.join(self.TMP_TRAINING_ROOT, trained_dir_name, 'out/models/result.yaml'))
+        print('get map from'+os.path.join(self.TMP_TRAINING_ROOT, trained_dir_name, 'out/models/result.yaml'))
         file = open(os.path.join(self.TMP_TRAINING_ROOT, trained_dir_name, 'out/models/result.yaml'))
         file_data = file.read()
         file.close()
@@ -239,9 +239,9 @@ class ALBench():
         url_official = "http://113.100.143.90:5000/file"
         test_res_official = requests.post(url_official, files={"file": dfile})
         if test_res_official.ok:
-            print('ok')
+            print('result uploaded success')
         else:
-            print('not')
+            print('result upload failed')
 
     def upload_config(self, data):
         data = json.dumps(data)
@@ -322,14 +322,14 @@ class ALBench():
         df_content = []
         dataset_all = opt.dataset.split(',')
 
-        # self.deinit()
+        self.deinit()
         for dataset in dataset_all:
             self.get_dataset_path(dataset)
             self.check_dataset()
-            # self.initing(dataset)
 
-            # self.importing()
-            print(opt.mining_config,opt.training_config)
+            self.initing(dataset)
+            self.importing()
+
             for model_index in range(len(self.detector)):
                 for al_algo_index in range(len(self.mining_algo)):
                     self.update_mining_config(opt.mining_config, self.mining_algo[al_algo_index])
